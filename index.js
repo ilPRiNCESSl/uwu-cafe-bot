@@ -5,14 +5,28 @@ const token = process.env.BOT_TOKEN;
 const guildId = process.env.GUILD_ID;
 const webhook = process.env.WEBHOOK;
 
+console.log("Loaded env vars:");
+console.log("TOKEN:", token ? "✓" : "✗");
+console.log("GUILD_ID:", guildId ? "✓" : "✗");
+console.log("WEBHOOK:", webhook ? "✓" : "✗");
+
+if (!token || !guildId || !webhook) {
+  console.error("Missing required environment variables!");
+  process.exit(1);
+}
+
 const CHANNELS = {
-  status: "1548296719664545892",      // OPEN/CLOSE
-  location: "1549513556133945424",    // Location
-  reviews: "1548295628335878224",     // Reviews
-  announcements: "1548166125924384782" // Announcements
+  status: "1548296719664545892",
+  location: "1549513556133945424",
+  reviews: "1548295628335878224",
+  announcements: "1548166125924384782"
 };
 
 async function sendWebhook(channelId, embed) {
+  if (!webhook) {
+    console.error("Webhook URL is missing!");
+    return;
+  }
   await axios.post(webhook, {
     content: `<#${channelId}>`,
     embeds: [embed]
@@ -93,7 +107,7 @@ client.on("interactionCreate", async interaction => {
         description: "The UwU Café is now open. 🌸☕",
         color: 0x77DD77
       });
-      await interaction.reply({ content: "Café set to **OPEN**.", ephemeral: true });
+      await interaction.reply({ content: "Café set to **OPEN**.", flags: 64 });
     }
 
     if (interaction.commandName === "close") {
@@ -102,7 +116,7 @@ client.on("interactionCreate", async interaction => {
         description: "The UwU Café is now closed. 💗",
         color: 0xFF6961
       });
-      await interaction.reply({ content: "Café set to **CLOSED**.", ephemeral: true });
+      await interaction.reply({ content: "Café set to **CLOSED**.", flags: 64 });
     }
 
     if (interaction.commandName === "location") {
@@ -114,7 +128,7 @@ client.on("interactionCreate", async interaction => {
       };
       if (imageUrl) embed.image = { url: imageUrl };
       await sendWebhook(CHANNELS.location, embed);
-      await interaction.reply({ content: "Location posted.", ephemeral: true });
+      await interaction.reply({ content: "Location posted.", flags: 64 });
     }
 
     if (interaction.commandName === "review") {
@@ -132,7 +146,7 @@ client.on("interactionCreate", async interaction => {
           `✍️ **Client:** ${clientUser}`,
         color: 0xFFB6C1
       });
-      await interaction.reply({ content: "Review posted.", ephemeral: true });
+      await interaction.reply({ content: "Review posted.", flags: 64 });
     }
 
     if (interaction.commandName === "announce") {
@@ -148,13 +162,13 @@ client.on("interactionCreate", async interaction => {
       if (imageUrl) embed.image = { url: imageUrl };
       
       await sendWebhook(CHANNELS.announcements, embed);
-      await interaction.reply({ content: "Announcement posted.", ephemeral: true });
+      await interaction.reply({ content: "Announcement posted.", flags: 64 });
     }
 
   } catch (err) {
     console.error(err);
     if (!interaction.replied) {
-      await interaction.reply({ content: "Something went wrong.", ephemeral: true });
+      await interaction.reply({ content: "Something went wrong.", flags: 64 });
     }
   }
 });
