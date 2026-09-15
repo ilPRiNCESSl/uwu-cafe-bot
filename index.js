@@ -32,11 +32,11 @@ const CONFIG_PATH = "./cafe-config.json";
 
 const defaultConfig = {
   images: {
-    open: "https://via.placeholder.com/400x300?text=OPEN",
-    close: "https://via.placeholder.com/400x300?text=CLOSED",
-    location: "https://via.placeholder.com/400x300?text=LOCATION",
-    review: "https://via.placeholder.com/400x300?text=REVIEW",
-    announce: "https://via.placeholder.com/400x300?text=ANNOUNCEMENT"
+    open: process.env.OPEN_IMG || "https://i.ibb.co/hJ59j8Z7/open.png",
+    close: process.env.CLOSE_IMG || "https://i.ibb.co/VYPXN2yD/close.png",
+    location: process.env.LOCATION_IMG || "https://i.ibb.co/20SVV8P8/location.png",
+    review: process.env.REVIEW_IMG || "https://i.ibb.co/0ycpgN5m/uwu.jpg",
+    announce: process.env.REVIEW_IMG || "https://i.ibb.co/0ycpgN5m/uwu.jpg"
   },
   text: {
     open: {
